@@ -46,8 +46,7 @@ public class DeliveryClientTest {
 	@Test
 	public void testFinalDeliveryTimeForOrderHappyFlow() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 30,
-				formatter.parseLocalTime("14:10:30"));
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 30,	formatter.parseLocalTime("14:10:30"));
 		order1.setFinalDeliveryTime();
 		assertEquals(formatter.parseLocalTime("14:40:30"), order1.getFinalDeliveryTime());
 
@@ -56,8 +55,7 @@ public class DeliveryClientTest {
 	@Test
 	public void testFinalDeliveryTimeForOrderOverflowCase() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 30,
-				formatter.parseLocalTime("14:40:30"));
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 30,	formatter.parseLocalTime("14:40:30"));
 		order1.setFinalDeliveryTime();
 		assertEquals(formatter.parseLocalTime("15:10:30"), order1.getFinalDeliveryTime());
 
@@ -66,20 +64,15 @@ public class DeliveryClientTest {
 	@Test
 	public void testIfOrdersAreSortedByTime() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,
-				formatter.parseLocalTime("14:10:30"));
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,	formatter.parseLocalTime("14:10:30"));
 		order1.setFinalDeliveryTime();
-		Order order2 = new Order(2, new CartesianCoordinates(new Double(0), new Double(10)), 40,
-				formatter.parseLocalTime("14:12:15"));
+		Order order2 = new Order(2, new CartesianCoordinates(new Double(0), new Double(10)), 40, formatter.parseLocalTime("14:12:15"));
 		order2.setFinalDeliveryTime();
-		Order order3 = new Order(3, new CartesianCoordinates(new Double(0), new Double(20)), 45,
-				formatter.parseLocalTime("14:07:22"));
+		Order order3 = new Order(3, new CartesianCoordinates(new Double(0), new Double(20)), 45, formatter.parseLocalTime("14:07:22"));
 		order3.setFinalDeliveryTime();
-		Order order4 = new Order(4, new CartesianCoordinates(new Double(0), new Double(30)), 43,
-				formatter.parseLocalTime("14:05:33"));
+		Order order4 = new Order(4, new CartesianCoordinates(new Double(0), new Double(30)), 43, formatter.parseLocalTime("14:05:33"));
 		order4.setFinalDeliveryTime();
-		Order order5 = new Order(5, new CartesianCoordinates(new Double(0), new Double(40)), 20,
-				formatter.parseLocalTime("14:35:20"));
+		Order order5 = new Order(5, new CartesianCoordinates(new Double(0), new Double(40)), 20, formatter.parseLocalTime("14:35:20"));
 		order5.setFinalDeliveryTime();
 		List<Order> orderList = new ArrayList<Order>();
 		orderList.add(order1);
@@ -96,8 +89,7 @@ public class DeliveryClientTest {
 	@Test
 	public void testAllocateDriverHappyFlow() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,
-				formatter.parseLocalTime("14:10:30"));
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,	formatter.parseLocalTime("14:10:30"));
 		order1.setFinalDeliveryTime();
 
 		DeliveryClient deliveryClient = new DeliveryClient();
@@ -109,8 +101,7 @@ public class DeliveryClientTest {
 	@Test
 	public void allocatingDriverWhenTwoAgentsHaveEqualPriorityButOneOfThemIsUnavailable() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,
-				formatter.parseLocalTime("14:10:30"));
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,	formatter.parseLocalTime("14:10:30"));
 		order1.setFinalDeliveryTime();
 
 		DeliveryClient deliveryClient = new DeliveryClient();
