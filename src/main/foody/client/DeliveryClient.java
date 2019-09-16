@@ -36,14 +36,14 @@ public class DeliveryClient {
 						resturant.getResturantLocation().getX1(), resturant.getResturantLocation().getY1());
 				distanceToOrderDestination = calculateDistanceBetweenPoints(resturant.getResturantLocation().getX1(), resturant.getResturantLocation().getY1(), 
 						order.getDeliveryLocation().getX1(), order.getDeliveryLocation().getY1());
-				currentPriority = calculatePriority(deliveryPartners.get(i), distanceFromResturant + distanceToOrderDestination);
+				currentPriority = calculatePriorityBasedOnReviewDistanceAndNoOfDeliveries(deliveryPartners.get(i), distanceFromResturant + distanceToOrderDestination);
 				if(i == 0) {
 					maxPriority = currentPriority;
 					allocatedDriver = deliveryPartners.get(i);
 					continue;
 				}
 				
-				if(Double.compare(currentPriority, maxPriority) < 0){
+				if(Double.compare(currentPriority, maxPriority) > 0){
 					maxPriority = currentPriority;	
 					allocatedDriver = deliveryPartners.get(i);
 				}
@@ -52,19 +52,16 @@ public class DeliveryClient {
 		return allocatedDriver;
 	}
 	
-	private static double calculatePriority(DeliveryPartner driver, double distance) {
+	private static double calculatePriorityBasedOnReviewDistanceAndNoOfDeliveries(DeliveryPartner driver, double distance) {
 		
 		double priorityRating = 0;
 		priorityRating = driver.getRating() / (driver.getNoOfOrdersDeliveredToday() + distance);
 		
 		return priorityRating;
 	}
-	private static double calculateDistanceBetweenPoints(
-			  double x1, 
-			  double y1, 
-			  double x2, 
-			  double y2) {       
-			    return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-			}
+	
+	private static double calculateDistanceBetweenPoints(double x1, double y1, double x2, double y2) {       
+	    return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+	}
 
 }

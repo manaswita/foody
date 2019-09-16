@@ -2,12 +2,10 @@ package main.foody.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
@@ -17,6 +15,7 @@ import main.foody.client.DeliveryClient;
 import main.foody.model.CartesianCoordinates;
 import main.foody.model.DeliveryPartner;
 import main.foody.model.Order;
+import main.foody.model.Resturant;
 
 public class DeliveryClientTest {
 
@@ -25,7 +24,7 @@ public class DeliveryClientTest {
 
 	@Before
 	public void setup() {
-		p1 = new DeliveryPartner(1, new CartesianCoordinates(new Double(0), new Double(20)), true, 6, new Float(4.2));
+		p1 = new DeliveryPartner(5, new CartesianCoordinates(new Double(0), new Double(120)), false, 6, new Float(5));
 		p2 = new DeliveryPartner(2, new CartesianCoordinates(new Double(0), new Double(50)), true, 2, new Float(3.2));
 		p3 = new DeliveryPartner(3, new CartesianCoordinates(new Double(0), new Double(100)), true, 10, new Float(4.0));
 		p4 = new DeliveryPartner(4, new CartesianCoordinates(new Double(0), new Double(100)), true, 3, new Float(3.3));
@@ -33,6 +32,7 @@ public class DeliveryClientTest {
 
 		p6 = new DeliveryPartner(6, new CartesianCoordinates(new Double(0), new Double(150)), false, 4, new Float(4.1));
 		p7 = new DeliveryPartner(7, new CartesianCoordinates(new Double(0), new Double(150)), true, 8, new Float(4.6));
+		
 
 		deliveryPartners.add(p1);
 		deliveryPartners.add(p2);
@@ -91,6 +91,33 @@ public class DeliveryClientTest {
 		PriorityQueue<Order> pq = client.addOrdersToTheQueue(orderList);
 		Order firstOrder = pq.peek();
 		assertEquals(order4, firstOrder);
+	}
+	
+	@Test
+	public void testAllocateDriverHappyFlow() {
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,
+				formatter.parseLocalTime("14:10:30"));
+		order1.setFinalDeliveryTime();
+
+		DeliveryClient deliveryClient = new DeliveryClient();
+		Resturant resturant = new Resturant(1, "Stoner", new CartesianCoordinates(new Double(0), new Double(90)));
+		DeliveryPartner allocatedDriver = deliveryClient.allocateADriver(order1, resturant, deliveryPartners);
+		assertEquals(p5, allocatedDriver);
 
 	}
+	@Test
+	public void allocatingDriverWhenTwoAgentsHaveEqualPriorityButOneOfThemIsUnavailable() {
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
+		Order order1 = new Order(1, new CartesianCoordinates(new Double(0), new Double(0)), 55,
+				formatter.parseLocalTime("14:10:30"));
+		order1.setFinalDeliveryTime();
+
+		DeliveryClient deliveryClient = new DeliveryClient();
+		Resturant resturant = new Resturant(1, "Stoner", new CartesianCoordinates(new Double(0), new Double(90)));
+		DeliveryPartner allocatedDriver = deliveryClient.allocateADriver(order1, resturant, deliveryPartners);
+		assertEquals(p5, allocatedDriver);
+
+	}
+
 }
