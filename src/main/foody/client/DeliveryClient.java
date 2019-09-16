@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import main.foody.comparator.OrderComparator;
+import main.foody.constant.FoodyConstants;
 import main.foody.model.DeliveryPartner;
 import main.foody.model.Order;
 import main.foody.model.Resturant;
@@ -52,11 +53,13 @@ public class DeliveryClient {
 		return allocatedDriver;
 	}
 	
-	private static double calculatePriorityBasedOnReviewDistanceAndNoOfDeliveries(DeliveryPartner driver, double distance) {
+	public static double calculatePriorityBasedOnReviewDistanceAndNoOfDeliveries(DeliveryPartner driver, double distance) {
 		
 		double priorityRating = 0;
-		priorityRating = driver.getRating() / (driver.getNoOfOrdersDeliveredToday() + distance);
 		
+		if(driver.getNoOfOrdersDeliveredToday() < FoodyConstants.MAX_NO_OF_DELIVERIES_ALLOWED) {
+			priorityRating = driver.getRating() / (driver.getNoOfOrdersDeliveredToday() + distance);
+		}
 		return priorityRating;
 	}
 	

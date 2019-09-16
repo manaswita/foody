@@ -116,8 +116,15 @@ public class DeliveryClientTest {
 		DeliveryClient deliveryClient = new DeliveryClient();
 		Resturant resturant = new Resturant(1, "Stoner", new CartesianCoordinates(new Double(0), new Double(90)));
 		DeliveryPartner allocatedDriver = deliveryClient.allocateADriver(order1, resturant, deliveryPartners);
-		assertEquals(p5, allocatedDriver);
+		assertEquals(p5.getDeliveryPartnerId(), allocatedDriver.getDeliveryPartnerId());
 
+	}
+	
+	@Test
+	public void testCalculatePriorityIfTheDriverHasReachedMaxOrders() {
+		DeliveryClient deliveryClient = new DeliveryClient();
+		double priorityRating = deliveryClient.calculatePriorityBasedOnReviewDistanceAndNoOfDeliveries(p3, 14.0);
+		assertEquals(priorityRating, 0.0);
 	}
 
 }
