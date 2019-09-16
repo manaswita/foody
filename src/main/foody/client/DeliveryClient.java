@@ -1,7 +1,9 @@
 package main.foody.client;
 
 import java.util.List;
+import java.util.PriorityQueue;
 
+import main.foody.comparator.OrderComparator;
 import main.foody.model.DeliveryPartner;
 import main.foody.model.Order;
 import main.foody.model.Resturant;
@@ -10,9 +12,14 @@ public class DeliveryClient {
 
 	public static void main(String[] args) {
 		
+	}
+	
+	public static PriorityQueue<Order> addOrdersToTheQueue(List<Order> orderList) {
 		
+		PriorityQueue<Order> pq = new PriorityQueue<Order>(new OrderComparator());
+		pq.addAll(orderList);
+		return pq;
 		
-
 	}
 	
 	public static DeliveryPartner allocateADriver(Order order, Resturant resturant, List<DeliveryPartner> deliveryPartners ) {
@@ -20,7 +27,8 @@ public class DeliveryClient {
 		DeliveryPartner allocatedDriver = null;
 		Double distanceFromResturant;
 		Double distanceToOrderDestination;
-		double minimumDistance = 0 ;
+		double maxPriority = 0 ;
+		double currentPriority = 0;
 		
 		for(int i=0; i<deliveryPartners.size(); i++) {
 			if(deliveryPartners.get(i).isAvaliable()) {
@@ -28,14 +36,15 @@ public class DeliveryClient {
 						resturant.getResturantLocation().getX1(), resturant.getResturantLocation().getY1());
 				distanceToOrderDestination = calculateDistanceBetweenPoints(resturant.getResturantLocation().getX1(), resturant.getResturantLocation().getY1(), 
 						order.getDeliveryLocation().getX1(), order.getDeliveryLocation().getY1());
+				currentPriority = calculatePriority(deliveryPartners.get(i), distanceFromResturant + distanceToOrderDestination);
 				if(i == 0) {
-					minimumDistance = distanceFromResturant + distanceToOrderDestination;
+					maxPriority = currentPriority;
 					allocatedDriver = deliveryPartners.get(i);
 					continue;
 				}
 				
-				if(Double.compare((distanceFromResturant + distanceToOrderDestination), minimumDistance) < 0){
-					minimumDistance = distanceFromResturant + distanceToOrderDestination;	
+				if(Double.compare(currentPriority, maxPriority) < 0){
+					maxPriority = currentPriority;	
 					allocatedDriver = deliveryPartners.get(i);
 				}
 			}
@@ -43,6 +52,13 @@ public class DeliveryClient {
 		return allocatedDriver;
 	}
 	
+	private static double calculatePriority(DeliveryPartner driver, double distance) {
+		
+		double priorityRating = 0;
+		priorityRating = driver.getRating() / (driver.getNoOfOrdersDeliveredToday() + distance);
+		
+		return priorityRating;
+	}
 	private static double calculateDistanceBetweenPoints(
 			  double x1, 
 			  double y1, 
